@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PostCreated;
+use App\Jobs\MailJob;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -47,7 +48,7 @@ class PostController extends Controller
             'message' => $request->post('message'),
         ]);
         event(new PostCreated($data));
-        
+        MailJob::dispatch($data);
         if($post){
             return redirect()->back()->with('msg','Post Created Succesfuly');
         }
